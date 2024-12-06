@@ -63,7 +63,7 @@ class PostController extends Controller
             $post->save();
         }
 
-        return redirect()->route('posts.index')->with('success', 'Post created successfully.');
+        return redirect()->route('admin.posts.index')->with('success', 'Post created successfully.');
     }
 
     /**
@@ -107,7 +107,7 @@ class PostController extends Controller
             $post->save();
         }
 
-        return redirect()->route('posts.index')->with('success', 'Post updated successfully.');
+        return redirect()->route('admin.posts.index')->with('success', 'Post updated successfully.');
     }
 
     /**
@@ -118,7 +118,7 @@ class PostController extends Controller
         $post = Post::findOrFail($id);
         $post->delete();
 
-        return redirect()->route('posts.index')->with('success', 'Post deleted successfully.');
+        return redirect()->route('admin.posts.index')->with('success', 'Post deleted successfully.');
     }
 
     /**
@@ -129,6 +129,6 @@ class PostController extends Controller
         $post = Post::onlyTrashed()->findOrFail($id);
         $post->restore();
 
-        return redirect()->route('posts.index')->with('success', 'Post restored successfully.');
+        return redirect()->route('admin.posts.index')->with('success', 'Post restored successfully.');
     }
 }

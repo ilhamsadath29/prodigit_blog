@@ -20,8 +20,9 @@ class CommentFactory extends Factory
     public function definition(): array
     {
         return [
-            'content' => $this->faker->sentence,
+            'comment' => $this->faker->sentence,
             'post_id' => \App\Models\Post::factory(),
+            'user_id' => \App\Models\User::factory(),
         ];
     }
 }

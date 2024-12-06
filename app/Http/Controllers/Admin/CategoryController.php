@@ -31,7 +31,7 @@ class CategoryController extends Controller
 
         $category = Category::create($validated);
 
-        return redirect()->route('categories.index');
+        return redirect()->route('admin.categories.index');
     }
 
     public function edit(Category $category)
@@ -53,7 +53,7 @@ class CategoryController extends Controller
 
         $category->update($validated);
 
-        return redirect()->route('categories.index');
+        return redirect()->route('admin.categories.index');
     }
 
     public function destroy(Category $category)
@@ -63,6 +63,6 @@ class CategoryController extends Controller
         if ($category->img_path) {
             Storage::disk('public')->delete($category->img_path);
         }
-        return redirect()->route('categories.index');
+        return redirect()->route('admin.categories.index');
     }
 }

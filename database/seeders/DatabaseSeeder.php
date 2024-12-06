@@ -31,11 +31,10 @@ class DatabaseSeeder extends Seeder
             'name' => 'admin',
             'email' => 'user@gmail.com',
             'password' => Hash::make("user123"),
-
         ]);
 
         Role::create(['name' => 'admin']);
-        Role::create(['name' => 'author']);
+        Role::create(['name' => 'user']);
 
         Permission::create(['name' => 'manage posts']);
         Permission::create(['name' => 'edit posts']);
@@ -43,7 +42,7 @@ class DatabaseSeeder extends Seeder
         $admin->assignRole('admin');
         $admin->givePermissionTo('manage posts');
         
-        $user->assignRole('author');
+        $user->assignRole('user');
 
         $categories = Category::factory(5)->create();
 
@@ -54,7 +53,7 @@ class DatabaseSeeder extends Seeder
                 $tags = Tag::inRandomOrder()->take(rand(2, 5))->get();
                 $post->tags()->attach($tags);
 
-                Comment::factory(rand(2, 5))->create(['post_id' => $post->id]);
+                Comment::factory(rand(2, 5))->create(['post_id' => $post->id, 'user_id' => $user->id]);
             }
         }
     }
