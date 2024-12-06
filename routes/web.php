@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -22,7 +23,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-
 Route::resource('categories', CategoryController::class);
+Route::resource('posts', PostController::class);
+Route::post('posts/{id}/restore', [PostController::class, 'restore'])->name('posts.restore');
+
 
 require __DIR__.'/auth.php';
