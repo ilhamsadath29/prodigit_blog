@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
@@ -13,12 +13,12 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::all();
-        return Inertia::render('Categories/Index', ['categories' => $categories]);
+        return Inertia::render('Admin/Categories/Index', ['categories' => $categories]);
     }
 
     public function create()
     {
-        return Inertia::render('Categories/Form');
+        return Inertia::render('Admin/Categories/Form');
     }
 
     public function store(CategoryRequest $request)
@@ -26,7 +26,7 @@ class CategoryController extends Controller
         $validated = $request->validated();
 
         if ($request->hasFile('img')) {
-            $validated['img_path'] = $request->file('img')->store('images', 'public');
+            $validated['img_path'] = $request->file('img')->store('categories', 'public');
         }
 
         $category = Category::create($validated);
@@ -36,7 +36,7 @@ class CategoryController extends Controller
 
     public function edit(Category $category)
     {
-        return Inertia::render('Categories/Form', ['category' => $category]);
+        return Inertia::render('Admin/Categories/Form', ['category' => $category]);
     }
 
     public function update(CategoryRequest $request, Category $category)
@@ -48,7 +48,7 @@ class CategoryController extends Controller
                 Storage::disk('public')->delete($category->img_path);
             }
             
-            $validated['img_path'] = $request->file('img')->store('images', 'public');
+            $validated['img_path'] = $request->file('img')->store('categories', 'public');
         }
 
         $category->update($validated);
