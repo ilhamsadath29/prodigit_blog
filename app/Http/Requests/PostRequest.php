@@ -22,16 +22,17 @@ class PostRequest extends FormRequest
     public function rules(): array
     {
         $vaildation =  [
-            'title'         => 'required|max:100|unique:posts,name',
+            'title'         => 'required|max:100|unique:posts,title',
             'content'       => 'required',
             'category_id'   => 'required|exists:categories,id',
-            'tags'          => 'array|exists:tags,id',
-            'img'           => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'tags'          => 'array|nullable',
+            'tags.*'        => 'exists:tags,id',
+            'image'         => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ];
 
         if ($this->isMethod('put')) {
-            $postId = $this->route('post'); 
-            $validation['name'] = 'required|string|max:100|unique:posts,name,' . $postId;
+            $post_id = $this->route('post'); 
+            $vaildation['title'] = 'required|string|max:100|unique:posts,title,' . $post_id;
         }
 
         return $vaildation;
