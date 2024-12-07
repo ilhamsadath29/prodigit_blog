@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\PostController;
 
-Route::get('/example', function () {
-    return response()->json(['message' => 'API Route Working']);
-});
+Route::get('/posts', [PostController::class, 'index']);
