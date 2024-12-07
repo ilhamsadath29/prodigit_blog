@@ -7,28 +7,21 @@ use App\Http\Requests\PostRequest;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
-    /**
-     * Display a listing of posts.
-     */
     public function index()
     {
         $posts = Post::with(['category', 'tags'])
             ->withTrashed() 
-            ->latest()
-            ->paginate(10);
+            ->get();
 
         return inertia('Admin/Posts/Index', [
             'posts' => $posts
         ]);
     }
 
-    /**
-     * Show the form for creating a new post.
-     */
     public function create()
     {
         $categories = Category::all();
@@ -40,17 +33,15 @@ class PostController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created post in the database.
-     */
     public function store(PostRequest $request)
     {
         $validated = $request->validated();
 
         $post = Post::create([
-            'title' => $validated['title'],
-            'content' => $validated['content'],
-            'category_id' => $validated['category_id']
+            'title'         => $validated['title'],
+            'content'       => $validated['content'],
+            'category_id'   => $validated['category_id'],
+            'user_id'       => Auth::id()
         ]);
 
         if ($request->has('tags')) {
@@ -66,9 +57,6 @@ class PostController extends Controller
         return redirect()->route('admin.posts.index')->with('success', 'Post created successfully.');
     }
 
-    /**
-     * Show the form for editing a post.
-     */
     public function edit($id)
     {
         $post = Post::withTrashed()->findOrFail($id);
@@ -82,9 +70,6 @@ class PostController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified post in the database.
-     */
     public function update(PostRequest $request, $id)
     {
         $validated = $request->validated();
@@ -94,7 +79,8 @@ class PostController extends Controller
         $post->update([
             'title' => $validated['title'],
             'content' => $validated['content'],
-            'category_id' => $validated['category_id']
+            'category_id' => $validated['category_id'],
+            'user_id'       => Auth::id()
         ]);
 
         if ($request->has('tags')) {
@@ -110,9 +96,6 @@ class PostController extends Controller
         return redirect()->route('admin.posts.index')->with('success', 'Post updated successfully.');
     }
 
-    /**
-     * Remove the specified post (soft delete).
-     */
     public function destroy($id)
     {
         $post = Post::findOrFail($id);
@@ -121,9 +104,6 @@ class PostController extends Controller
         return redirect()->route('admin.posts.index')->with('success', 'Post deleted successfully.');
     }
 
-    /**
-     * Restore a soft-deleted post.
-     */
     public function restore($id)
     {
         $post = Post::onlyTrashed()->findOrFail($id);

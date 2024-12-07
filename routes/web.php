@@ -3,17 +3,20 @@
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\TagController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\User\PostController as UserPostController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register')
-    ]);
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// Route::get('/', function () {
+//     return Inertia::render('Auth/Login', [
+//         'canLogin' => Route::has('login'),
+//         'canRegister' => Route::has('register')
+//     ]);
+// });
 
 Route::get('/admin/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -25,24 +28,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::resource('categories', CategoryController::class);
-Route::resource('posts', PostController::class);
-Route::post('posts/{id}/restore', [PostController::class, 'restore'])->name('posts.restore');
-
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin|user'])->group(function () {
     Route::resource('categories', CategoryController::class);
     Route::resource('posts', PostController::class);
     Route::post('posts/{id}/restore', [PostController::class, 'restore'])->name('posts.restore');
     Route::resource('tags', TagController::class);
 });
 
-Route::middleware(['auth', 'role:author'])->group(function () {
-    Route::get('user/posts', [UserPostController::class, 'index'])->name('user.posts.index');
-    Route::get('user/posts/create', [UserPostController::class, 'create'])->name('user.posts.create');
-    Route::post('user/posts', [UserPostController::class, 'store'])->name('user.posts.store');
-    Route::get('user/posts/{id}/edit', [UserPostController::class, 'edit'])->name('user.posts.edit');
-    Route::put('user/posts/{id}', [UserPostController::class, 'update'])->name('user.posts.update');
-    Route::delete('user/posts/{id}', [UserPostController::class, 'destroy'])->name('user.posts.destroy');
-});
+Route::post('comments/{id}', [CommentController::class, 'store'])->name('comments.store');
 
 require __DIR__.'/auth.php';

@@ -79,6 +79,10 @@ const handleSubmit = () => {
 
                                 <InputError class="mt-2" :message="form.errors.name" />
                             </div>
+
+                            <div class="flex justify-end">
+                                <PrimaryButton>{{ tag ? 'Update' : 'Create' }}</PrimaryButton>
+                            </div>
                         </form>
                     </div>
                 </div>
