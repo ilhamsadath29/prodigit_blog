@@ -60,6 +60,13 @@ const showingNavigationDropdown = ref(false);
                                 >
                                     Tags
                                 </NavLink>
+
+                                <NavLink
+                                    :href="route('admin.users.index')"
+                                    :active="route().current()?.startsWith('admin.users.')"
+                                >
+                                    Users
+                                </NavLink>
                             </div>
                         </div>
 

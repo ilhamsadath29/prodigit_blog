@@ -3,12 +3,9 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import InputError from '@/Components/InputError.vue';
 import TextInput from '@/Components/TextInput.vue';
-import TextAreaInput from '@/Components/TextAreaInput.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 
 import { Head, useForm, usePage } from '@inertiajs/vue3';
-import { ref } from 'vue';
-
 
 interface Tag {
   id?: number; 
@@ -26,7 +23,6 @@ interface PageProps {
 const { props } = usePage<PageProps>();
 const tag = props.tag;
 
-console.log(tag);
 
 interface FormData {
   name: string;

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\TagController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
@@ -33,6 +34,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin|user'])-
     Route::resource('posts', PostController::class);
     Route::post('posts/{id}/restore', [PostController::class, 'restore'])->name('posts.restore');
     Route::resource('tags', TagController::class);
+    Route::resource('users', UserController::class);
 });
 
 Route::post('comments/{id}', [CommentController::class, 'store'])->name('comments.store');
