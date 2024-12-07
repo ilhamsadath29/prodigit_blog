@@ -44,6 +44,9 @@ class RegisteredUserController extends Controller
 
         $user->assignRole('user');
 
+        $permissions = ['can-list-posts', 'can-create-posts', 'can-edit-posts', 'can-delete-posts', 'can-restore-posts'];
+        $user->givePermissionTo($permissions);
+
         event(new Registered($user));
 
         Auth::login($user);

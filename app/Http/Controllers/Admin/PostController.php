@@ -7,12 +7,17 @@ use App\Http\Requests\PostRequest;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
+    use AuthorizesRequests;
+
     public function index()
     {
+        $this->authorize('viewAny', Post::class);
+
         $posts = Post::with(['category', 'tags'])
             ->withTrashed() 
             ->get();
@@ -24,6 +29,7 @@ class PostController extends Controller
 
     public function create()
     {
+        $this->authorize('create', Post::class);
         $categories = Category::all();
         $tags = Tag::all();
 
@@ -35,6 +41,7 @@ class PostController extends Controller
 
     public function store(PostRequest $request)
     {
+        $this->authorize('create', Post::class);
         $validated = $request->validated();
 
         $post = Post::create([
@@ -60,6 +67,7 @@ class PostController extends Controller
     public function edit($id)
     {
         $post = Post::withTrashed()->findOrFail($id);
+        $this->authorize('update', $post);
         $categories = Category::all();
         $tags = Tag::all();
 
@@ -75,6 +83,7 @@ class PostController extends Controller
         $validated = $request->validated();
 
         $post = Post::withTrashed()->findOrFail($id);
+        $this->authorize('update', $post);
 
         $post->update([
             'title' => $validated['title'],
@@ -99,16 +108,18 @@ class PostController extends Controller
     public function destroy($id)
     {
         $post = Post::findOrFail($id);
-        $post->delete();
+        $this->authorize('delete', $post);
 
+        $post->delete();
         return redirect()->route('admin.posts.index')->with('success', 'Post deleted successfully.');
     }
 
     public function restore($id)
     {
         $post = Post::onlyTrashed()->findOrFail($id);
-        $post->restore();
+        $this->authorize('restore', $post);
 
+        $post->restore();
         return redirect()->route('admin.posts.index')->with('success', 'Post restored successfully.');
     }
 }

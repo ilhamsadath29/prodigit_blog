@@ -7,7 +7,6 @@ use App\Models\Comment;
 use App\Models\Post;
 use App\Models\Tag;
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
@@ -20,86 +19,73 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $admin = User::factory()->create([
-            'name' => 'Admin',
-            'email' => 'admin@gmail.com',
-            'password' => Hash::make("admin123"),
+        // Create roles and permissions
+        $this->createRolesAndPermissions();
 
-        ]);
+        // Create users
+        $admin = $this->createUser('Admin', 'admin@gmail.com', 'admin123', 'admin');
+        $user = $this->createUser('User', 'user@gmail.com', 'user123', 'user');
 
-        $user = User::factory()->create([
-            'name' => 'User',
-            'email' => 'user@gmail.com',
-            'password' => Hash::make("user123"),
-        ]);
+        // Assign permissions to roles
+        $this->assignPermissionsToAdmin($admin);
+        $this->assignPermissionsToUser($user);
 
-        $user1 = User::factory()->create([
-            'name' => 'User1',
-            'email' => 'user1@gmail.com',
-            'password' => Hash::make("user123"),
-        ]);
+        // Seed categories, tags, posts, and comments
+        $this->seedPostsWithTagsAndComments();
+    }
 
-
+    private function createRolesAndPermissions(): void
+    {
+        // Create roles
         Role::create(['name' => 'admin']);
         Role::create(['name' => 'user']);
 
-        Permission::create(['name' => 'list posts']);
-        Permission::create(['name' => 'create posts']);
-        Permission::create(['name' => 'edit posts']);
-        Permission::create(['name' => 'delete posts']);
-        Permission::create(['name' => 'restore posts']);
+        // Define permissions
+        $permissions = [
+            'can-list-users', 'can-create-users', 'can-delete-users',
+            'can-list-tags', 'can-create-tags', 'can-edit-tags', 'can-delete-tags',
+            'can-list-categories', 'can-create-categories', 'can-edit-categories', 'can-delete-categories',
+            'can-list-posts', 'can-create-posts', 'can-edit-posts', 'can-delete-posts', 'can-restore-posts',
+        ];
 
-        Permission::create(['name' => 'list categories']);
-        Permission::create(['name' => 'create categories']);
-        Permission::create(['name' => 'edit categories']);
-        Permission::create(['name' => 'delete categories']);
+        // Create permissions
+        foreach ($permissions as $permission) {
+            Permission::create(['name' => $permission]);
+        }
+    }
 
-        Permission::create(['name' => 'list tags']);
-        Permission::create(['name' => 'create tags']);
-        Permission::create(['name' => 'edit tags']);
-        Permission::create(['name' => 'delete tags']);
+    private function createUser(string $name, string $email, string $password, string $role): User
+    {
+        $user = User::factory()->create([
+            'name' => $name,
+            'email' => $email,
+            'password' => Hash::make($password),
+        ]);
 
-        Permission::create(['name' => 'list users']);
-        Permission::create(['name' => 'create users']);
-        Permission::create(['name' => 'edit users']);
-        Permission::create(['name' => 'delete users']);
+        $user->assignRole($role);
+        return $user;
+    }
 
-        $admin->assignRole('admin');
-        $admin->givePermissionTo('list users');
-        $admin->givePermissionTo('create users');
-        $admin->givePermissionTo('edit users');
-        $admin->givePermissionTo('delete users');
+    private function assignPermissionsToAdmin(User $admin): void
+    {
+        $permissions = [
+            'can-list-users', 'can-create-users', 'can-delete-users',
+            'can-list-tags', 'can-create-tags', 'can-edit-tags', 'can-delete-tags',
+            'can-list-categories', 'can-create-categories', 'can-edit-categories', 'can-delete-categories',
+            'can-list-posts', 'can-create-posts', 'can-edit-posts', 'can-delete-posts', 'can-restore-posts',
+        ];
 
-        $admin->givePermissionTo('list tags');
-        $admin->givePermissionTo('create tags');
-        $admin->givePermissionTo('edit tags');
-        $admin->givePermissionTo('delete tags');
+        $admin->givePermissionTo($permissions);
+    }
 
-        $admin->givePermissionTo('list categories');
-        $admin->givePermissionTo('create categories');
-        $admin->givePermissionTo('edit categories');
-        $admin->givePermissionTo('delete categories');
-        
-        $admin->givePermissionTo('list posts');
-        $admin->givePermissionTo('create posts');
-        $admin->givePermissionTo('edit posts');
-        $admin->givePermissionTo('delete posts');
-        $admin->givePermissionTo('restore posts');
-        
-        $user->assignRole('user');
-        $user->givePermissionTo('list posts');
-        $user->givePermissionTo('create posts');
-        $user->givePermissionTo('edit posts');
-        $user->givePermissionTo('delete posts');
-        $user->givePermissionTo('restore posts');
+    private function assignPermissionsToUser(User $user): void
+    {
+        $permissions = ['can-list-posts', 'can-create-posts', 'can-edit-posts', 'can-delete-posts', 'can-restore-posts'];
+        $user->givePermissionTo($permissions);
+    }
 
-        $user1->assignRole('user');
-        $user1->givePermissionTo('list posts');
-        $user1->givePermissionTo('create posts');
-        $user1->givePermissionTo('edit posts');
-        $user1->givePermissionTo('delete posts');
-        $user1->givePermissionTo('restore posts');
-        
+    private function seedPostsWithTagsAndComments(): void
+    {
         Category::factory(5)->create();
         Tag::factory(7)->create();
 

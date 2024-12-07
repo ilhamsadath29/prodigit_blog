@@ -41,6 +41,7 @@ const showingNavigationDropdown = ref(false);
                                 </NavLink>
                                 
                                 <NavLink
+                                    v-if="$page.props.auth.permissions.includes('can-list-categories')"
                                     :href="route('admin.categories.index')"
                                     :active="route().current()?.startsWith('admin.categories.')"
                                 >
@@ -48,6 +49,7 @@ const showingNavigationDropdown = ref(false);
                                 </NavLink>
 
                                 <NavLink
+                                    v-if="$page.props.auth.permissions.includes('can-list-posts')"
                                     :href="route('admin.posts.index')"
                                     :active="route().current()?.startsWith('admin.posts.')"
                                 >
@@ -55,6 +57,7 @@ const showingNavigationDropdown = ref(false);
                                 </NavLink>
 
                                 <NavLink
+                                    v-if="$page.props.auth.permissions.includes('can-list-tags')"
                                     :href="route('admin.tags.index')"
                                     :active="route().current()?.startsWith('admin.tags.')"
                                 >
@@ -62,6 +65,7 @@ const showingNavigationDropdown = ref(false);
                                 </NavLink>
 
                                 <NavLink
+                                    v-if="$page.props.auth.permissions.includes('can-list-users')"
                                     :href="route('admin.users.index')"
                                     :active="route().current()?.startsWith('admin.users.')"
                                 >
