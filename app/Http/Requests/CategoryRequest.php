@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
 
 class CategoryRequest extends FormRequest
 {
@@ -21,17 +22,15 @@ class CategoryRequest extends FormRequest
      */
     public function rules(): array
     {
-        $vaildation =  [
-            'name' => 'required|string|max:255|unique:categories,name',
-            'content' => 'nullable|string',
-            'img' => 'nullable|image|mimes:jpg,jpeg,png,gif',
+        $category = $this->route('category');
+
+        return [
+            'name' => [
+                'required', 
+                'string',
+                'max:255',
+                'unique:categories,name,' . ($category ? $category->id : 'NULL'), 
+            ]
         ];
-
-        if ($this->isMethod('put')) {
-            $categoryId = $this->route('category'); 
-            $validation['name'] = 'required|string|max:255|unique:categories,name,' . $categoryId;
-        }
-
-        return $vaildation;
     }
 }

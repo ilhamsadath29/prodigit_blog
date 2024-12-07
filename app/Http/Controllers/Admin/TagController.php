@@ -9,7 +9,6 @@ use Inertia\Inertia;
 
 class TagController extends Controller
 {
-    // Display a list of tags
     public function index()
     {
         $tags = Tag::all();
@@ -18,13 +17,11 @@ class TagController extends Controller
         ]);
     }
 
-    // Show the form to create a new tag
     public function create()
     {
-        return Inertia::render('Admin/Tags/Create');
+        return Inertia::render('Admin/Tags/Form');
     }
 
-    // Store a new tag in the database
     public function store(TagRequest $request)
     {
         $validated = $request->validated();
@@ -33,15 +30,13 @@ class TagController extends Controller
         return redirect()->route('admin.tags.index')->with('success', 'Tag created successfully.');
     }
 
-    // Show the form to edit a tag
     public function edit(Tag $tag)
     {
-        return Inertia::render('Admin/Tags/Edit', [
+        return Inertia::render('Admin/Tags/Form', [
             'tag' => $tag,
         ]);
     }
 
-    // Update a tag in the database
     public function update(TagRequest $request, Tag $tag)
     {
         $validated = $request->validated();
@@ -51,7 +46,6 @@ class TagController extends Controller
         return redirect()->route('admin.tags.index')->with('success', 'Tag updated successfully.');
     }
 
-    // Delete a tag
     public function destroy(Tag $tag)
     {
         $tag->delete();

@@ -1,5 +1,3 @@
 <template>
-    <div>
-        Prodigit Bolg
-    </div>
+    Prodigit Blog
 </template>
