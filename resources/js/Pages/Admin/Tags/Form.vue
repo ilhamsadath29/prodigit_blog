@@ -10,7 +10,7 @@ import { Head, useForm, usePage } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
 
-interface Category {
+interface Tag {
   id?: number; 
   name?: string;
 }
@@ -19,40 +19,40 @@ interface PageProps {
   auth: {
     user: any; 
   };
-  category?: Category;
+  tag?: Tag;
   [key: string]: any;
 }
 
 const { props } = usePage<PageProps>();
-const category = props.category;
+const tag = props.tag;
 
-console.log(category);
+console.log(tag);
 
 interface FormData {
   name: string;
 }
 
 const form = useForm<FormData>({
-  name: category?.name || ''
+  name: tag?.name || '',
 });
 
 const handleSubmit = () => {
-    if (category) {
-        form.put(route('admin.categories.update', category.id));
+    if (tag) {
+        form.put(route('admin.tags.update', tag.id));
     } else {
-        form.post(route('admin.categories.store'));
+        form.post(route('admin.tags.store'));
     }
 };
 
 </script>
 
 <template>
-    <Head title="Category" />
+    <Head title="Tag" />
 
     <AuthenticatedLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                {{ category ? 'Edit' : 'Create' }} Category
+                {{ tag ? 'Edit' : 'Create' }} Tag
             </h2>
         </template>
 
@@ -62,7 +62,6 @@ const handleSubmit = () => {
                     <div class="p-6 text-gray-900">
                         <form 
                             @submit.prevent="handleSubmit"
-                            enctype="multipart/form-data"
                             class="mt-6 space-y-6"
                         >
                             <div>
@@ -79,10 +78,6 @@ const handleSubmit = () => {
                                 />
 
                                 <InputError class="mt-2" :message="form.errors.name" />
-                            </div>
-
-                            <div class="flex justify-end">
-                                <PrimaryButton>{{ category ? 'Update' : 'Create' }}</PrimaryButton>
                             </div>
                         </form>
                     </div>

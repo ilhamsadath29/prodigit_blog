@@ -2,7 +2,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
-import TextAreaInput from '@/components/TextAreaInput.vue';
+import TextAreaInput from '@/Components/TextAreaInput.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 
 import { Head, useForm, usePage } from '@inertiajs/vue3';
@@ -23,9 +23,9 @@ const form = useForm({
 
 const handleSubmit = () => {
     if (post) {
-        form.put(route('categories.update', post.id));
+        form.put(route('admin.posts.update', post.id));
     } else {
-        form.post(route('categories.store'));
+        form.post(route('admin.posts.store'));
     }
 };
 

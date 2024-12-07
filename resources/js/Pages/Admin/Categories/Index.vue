@@ -1,12 +1,15 @@
 <script setup lang="ts">
-import ButtonLink from '@/components/ButtonLink.vue';
+import ButtonLink from '@/Components/ButtonLink.vue';
 import DangerButton from '@/Components/DangerButton.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { Head, useForm } from '@inertiajs/vue3';
 import { PropType } from 'vue';
 
 defineProps({
-    categories: Array as PropType<{ id: number; name: string; content: string }[]>
+    categories: Array as PropType<{ 
+        id: number; 
+        name: string; 
+    }[]>
 });
 
 const form = useForm({});
@@ -15,7 +18,7 @@ const deleteCategory = async (id: number) => {
     try {
         const confirmDelete = window.confirm('Are you sure you want to delete this category?');
         if (confirmDelete) {
-            form.delete(route('categories.destroy', id), {
+            form.delete(route('admin.categories.destroy', id), {
                 preserveScroll: true
             });
         }
@@ -36,7 +39,7 @@ const deleteCategory = async (id: number) => {
                     Categories
                 </h2>
                 
-                <ButtonLink :href="route('categories.create')" >Create Category</ButtonLink>
+                <ButtonLink :href="route('admin.categories.create')" >Create Category</ButtonLink>
             </div>
         </template>
 
@@ -48,16 +51,14 @@ const deleteCategory = async (id: number) => {
                             <thead class="bg-gray-100">
                                 <tr>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">Name</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">Content</th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="category in categories" :key="category.id" class="hover:bg-gray-100">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border-b">{{ category.name }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 border-b">{{ category.content }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium border-b">
-                                        <ButtonLink :href="route('categories.edit', category.id)">
+                                        <ButtonLink :href="route('admin.categories.edit', category.id)">
                                             <font-awesome-icon :icon="['fas', 'pencil-alt']" />
                                         </ButtonLink>
 
